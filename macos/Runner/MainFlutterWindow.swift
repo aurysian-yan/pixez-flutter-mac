@@ -37,10 +37,24 @@ class MainFlutterWindow: NSWindow, FlutterStreamHandler {
     }
     
     override func awakeFromNib() {
+        super.awakeFromNib()
+
+        // ✅ 无标题栏设置（必须在这里做，避免被 Flutter 覆盖）
+        self.titleVisibility = .hidden
+        self.titlebarAppearsTransparent = true
+        self.styleMask.insert(.fullSizeContentView)
+        self.isMovableByWindowBackground = true
+        self.toolbar = nil
+
+        if #available(macOS 11.0, *) {
+            self.titlebarSeparatorStyle = .none
+        }
+
         let flutterViewController = FlutterViewController()
         let windowFrame = self.frame
         self.contentViewController = flutterViewController
         self.setFrame(windowFrame, display: true)
+
         let batteryChannel = FlutterMethodChannel(
             name: "com.perol.dev/custom_tab",
             binaryMessenger: flutterViewController.engine.binaryMessenger)
@@ -56,13 +70,15 @@ class MainFlutterWindow: NSWindow, FlutterStreamHandler {
                 result(nil)
             }
         }
-        let eventChannel = FlutterEventChannel(name: "deep_links/events", binaryMessenger: flutterViewController.engine.binaryMessenger)
+
+        let eventChannel = FlutterEventChannel(
+            name: "deep_links/events",
+            binaryMessenger: flutterViewController.engine.binaryMessenger)
         eventChannel.setStreamHandler(self)
 
         DocumentPlugin.bind(controller: flutterViewController)
 
         RegisterGeneratedPlugins(registry: flutterViewController)
-        super.awakeFromNib()
     }
 
     func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {

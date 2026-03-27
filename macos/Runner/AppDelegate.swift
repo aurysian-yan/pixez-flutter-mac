@@ -14,4 +14,20 @@ class AppDelegate: FlutterAppDelegate {
             eventSink?(i.absoluteString)
         }
     }
+
+    override func applicationDidFinishLaunching(_ notification: Notification) {
+        super.applicationDidFinishLaunching(notification)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let window = NSApplication.shared.windows.first {
+                window.titleVisibility = .hidden
+                window.titlebarAppearsTransparent = true
+                window.styleMask.insert(.fullSizeContentView)
+                window.isMovableByWindowBackground = true
+
+                window.toolbar = nil
+                window.titlebarSeparatorStyle = .none
+            }
+        }
+    }
 }

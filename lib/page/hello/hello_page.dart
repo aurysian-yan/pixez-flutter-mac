@@ -44,6 +44,7 @@ class _HelloPageState extends State<HelloPage> {
   late int index;
   late PageController _pageController;
   double? bottomNavigatorHeight = null;
+  double get topPadding => 30;
   late List<Widget> _lists;
 
   @override
@@ -125,31 +126,31 @@ class _HelloPageState extends State<HelloPage> {
       builder: (context, constraints) {
         final wide = constraints.maxWidth > constraints.maxHeight;
         return Scaffold(
-          body: Row(
-            children: <Widget>[
-              if (wide) ..._buildRail(context),
-              Expanded(child: _buildPageView(context)),
-            ],
+          body: Padding(
+            padding: EdgeInsets.only(top: wide ? 0 : topPadding),
+            child: Row(
+              children: <Widget>[
+                if (wide) ..._buildRail(context),
+                Expanded(child: _buildPageView(context)),
+              ],
+            ),
           ),
           extendBody: true,
-          bottomNavigationBar:
-              wide
-                  ? null
-                  : Observer(
-                    builder: (context) {
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        transform: Matrix4.translationValues(
-                          0,
-                          fullScreenStore.fullscreen
-                              ? bottomNavigatorHeight!
-                              : 0,
-                          0,
-                        ),
-                        child: _buildNavigationBar(context),
-                      );
-                    },
-                  ),
+          bottomNavigationBar: wide
+              ? null
+              : Observer(
+                  builder: (context) {
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      transform: Matrix4.translationValues(
+                        0,
+                        fullScreenStore.fullscreen ? bottomNavigatorHeight! : 0,
+                        0,
+                      ),
+                      child: _buildNavigationBar(context),
+                    );
+                  },
+                ),
         );
       },
     );
@@ -157,72 +158,74 @@ class _HelloPageState extends State<HelloPage> {
 
   List<Widget> _buildRail(BuildContext context) {
     return [
-      Stack(
-        children: [
-          NavigationRail(
-            selectedIndex: index,
-            labelType: NavigationRailLabelType.all,
-            onDestinationSelected: (int index) {
-              _pageController.jumpToPage(index);
-              setState(() {
-                index = index;
-              });
-            },
-            destinations: <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.home),
-                label: Text(I18n.of(context).home),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.leaderboard),
-                label: Text(I18n.of(context).rank),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.favorite),
-                label: Text(I18n.of(context).quick_view),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.search),
-                label: Text(I18n.of(context).search),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.more_horiz),
-                label: Text(I18n.of(context).more),
-              ),
-            ],
-          ),
-          Positioned(
-            left: 0.0,
-            right: 0.0,
-            bottom: 0.0,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).padding.left,
-                bottom: MediaQuery.of(context).padding.bottom + 4.0,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 2,
-                  ),
+      Padding(
+        padding: EdgeInsets.only(top: topPadding),
+        child: Stack(
+          children: [
+            NavigationRail(
+              selectedIndex: index,
+              labelType: NavigationRailLabelType.all,
+              onDestinationSelected: (int index) {
+                _pageController.jumpToPage(index);
+                setState(() {
+                  index = index;
+                });
+              },
+              destinations: <NavigationRailDestination>[
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text(I18n.of(context).home),
                 ),
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child:
-                      accountStore.now != null
-                          ? PainterAvatar(
+                NavigationRailDestination(
+                  icon: Icon(Icons.leaderboard),
+                  label: Text(I18n.of(context).rank),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.favorite),
+                  label: Text(I18n.of(context).quick_view),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.search),
+                  label: Text(I18n.of(context).search),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.more_horiz),
+                  label: Text(I18n.of(context).more),
+                ),
+              ],
+            ),
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              bottom: 0.0,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).padding.left,
+                  bottom: MediaQuery.of(context).padding.bottom + 4.0,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: accountStore.now != null
+                        ? PainterAvatar(
                             url: accountStore.now!.userImage,
                             id: int.tryParse(accountStore.now!.userId) ?? 0,
                           )
-                          : Container(),
+                        : Container(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       const VerticalDivider(thickness: 1, width: 1),
     ];
