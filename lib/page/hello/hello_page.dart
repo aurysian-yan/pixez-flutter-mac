@@ -159,7 +159,7 @@ class _HelloPageState extends State<HelloPage> {
   List<Widget> _buildRail(BuildContext context) {
     return [
       Padding(
-        padding: EdgeInsets.only(top: topPadding),
+        padding: EdgeInsets.only(top: topPadding, bottom: 14),
         child: Stack(
           children: [
             NavigationRail(

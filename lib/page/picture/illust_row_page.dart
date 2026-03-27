@@ -114,7 +114,13 @@ class _IllustRowPageState extends State<IllustRowPage>
   Widget _buildAppbar() {
     return Column(
       children: [
-        Container(height: MediaQuery.of(context).padding.top),
+        Container(
+          height:
+              MediaQuery.of(context).padding.top +
+              (Theme.of(context).platform == TargetPlatform.macOS
+                  ? kMaterialMacCaptionTopPadding
+                  : 0),
+        ),
         Container(
           child: Row(
             mainAxisSize: MainAxisSize.max,

@@ -184,7 +184,7 @@ abstract class _MuteStoreBase with Store {
   }
 
   importFile() async {
-    final uri = await SAFPlugin.openFile();
+    final uri = await SAFPlugin.pickFile();
     if (uri != null) {
       final data = utf8.decode(uri);
       final entity = jsonDecode(data);

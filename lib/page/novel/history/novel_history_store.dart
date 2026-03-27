@@ -65,7 +65,7 @@ abstract class _NovelHistoryStoreBase with Store {
   }
 
   Future<void> importData() async {
-    final result = await SAFPlugin.openFile();
+    final result = await SAFPlugin.pickFile();
     if (result == null) return;
     final json = utf8.decode(result);
     final decoder = JsonDecoder();

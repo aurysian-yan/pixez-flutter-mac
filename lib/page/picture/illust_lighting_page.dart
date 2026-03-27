@@ -185,7 +185,11 @@ class _IllustVerticalPageState extends State<IllustVerticalPage>
   Widget _buildAppbar() {
     return Column(
       children: [
-        Container(height: MediaQuery.of(context).padding.top),
+        Container(
+          height:
+              MediaQuery.of(context).padding.top +
+              (Platform.isMacOS ? kMaterialMacCaptionTopPadding : 0),
+        ),
         Container(
           child: Row(
             mainAxisSize: MainAxisSize.max,

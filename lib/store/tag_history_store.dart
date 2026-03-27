@@ -71,7 +71,7 @@ abstract class _TagHistoryStoreBase with Store {
   final EXPORT_TYPE = "history_tags";
 
   Future<void> importData() async {
-    final result = await SAFPlugin.openFile();
+    final result = await SAFPlugin.pickFile();
     if (result == null) return;
     final json = utf8.decode(result);
     final decoder = JsonDecoder();

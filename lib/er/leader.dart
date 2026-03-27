@@ -38,6 +38,33 @@ import 'package:pixez/page/soup/soup_page.dart';
 import 'package:pixez/page/user/users_page.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+const double _materialSubPageTopPadding = 30;
+const double kMaterialMacCaptionTopPadding = 28;
+
+Widget _wrapMaterialSubPage(Widget child) {
+  return Padding(
+    padding: EdgeInsets.only(
+      top:
+          _materialSubPageTopPadding +
+          (Platform.isMacOS ? kMaterialMacCaptionTopPadding : 0),
+    ),
+    child: child,
+  );
+}
+
+MaterialPageRoute _buildMaterialRoute(
+  Widget page, {
+  bool wrapInScaffold = false,
+  bool forceSkipWrap = false,
+}) {
+  final child = forceSkipWrap || page is Scaffold
+      ? page
+      : _wrapMaterialSubPage(page);
+  return MaterialPageRoute(
+    builder: (context) => wrapInScaffold ? Scaffold(body: child) : child,
+  );
+}
+
 class Leader {
   static Future<void> pushUntilHome(BuildContext context) async {
     if (Constants.isFluent) {
@@ -80,16 +107,14 @@ class Leader {
     }
     if (link.host == "script" && link.scheme == "pixez") {
       Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            return SaveEvalPage(
-              eval: link.queryParameters["code"] != null
-                  ? String.fromCharCodes(
-                      base64Decode(link.queryParameters["code"]!),
-                    )
-                  : null,
-            );
-          },
+        _buildMaterialRoute(
+          SaveEvalPage(
+            eval: link.queryParameters["code"] != null
+                ? String.fromCharCodes(
+                    base64Decode(link.queryParameters["code"]!),
+                  )
+                : null,
+          ),
         ),
       );
       return true;
@@ -99,13 +124,9 @@ class Leader {
         link.pathSegments.last.split(".").first.split("_").first,
       );
       if (id != null) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return IllustLightingPage(id: id);
-            },
-          ),
-        );
+        Navigator.of(
+          context,
+        ).push(_buildMaterialRoute(IllustLightingPage(id: id)));
         return true;
       }
     }
@@ -189,38 +210,29 @@ class Leader {
       var idSource = link.pathSegments.last;
       try {
         int id = int.parse(idSource);
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return IllustLightingPage(id: id);
-            },
-          ),
-        );
+        Navigator.of(
+          context,
+          rootNavigator: true,
+        ).push(_buildMaterialRoute(IllustLightingPage(id: id)));
       } catch (e) {}
       return true;
     } else if (link.host.contains('user')) {
       var idSource = link.pathSegments.last;
       try {
         int id = int.parse(idSource);
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return UsersPage(id: id);
-            },
-          ),
-        );
+        Navigator.of(
+          context,
+          rootNavigator: true,
+        ).push(_buildMaterialRoute(UsersPage(id: id)));
       } catch (e) {}
       return true;
     } else if (link.host.contains("novel")) {
       try {
         int id = int.parse(link.pathSegments.last);
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return NovelViewerPage(id: id);
-            },
-          ),
-        );
+        Navigator.of(
+          context,
+          rootNavigator: true,
+        ).push(_buildMaterialRoute(NovelViewerPage(id: id)));
         return true;
       } catch (e) {
         LPrinter.d(e);
@@ -232,13 +244,10 @@ class Leader {
         if (index != -1) {
           try {
             int id = int.parse(paths[index + 1]);
-            Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return IllustLightingPage(id: id);
-                },
-              ),
-            );
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).push(_buildMaterialRoute(IllustLightingPage(id: id)));
             return true;
           } catch (e) {
             LPrinter.d(e);
@@ -254,7 +263,7 @@ class Leader {
             Navigator.of(
               context,
               rootNavigator: true,
-            ).push(MaterialPageRoute(builder: (context) => UsersPage(id: id)));
+            ).push(_buildMaterialRoute(UsersPage(id: id)));
             return true;
           } catch (e) {
             print(e);
@@ -280,19 +289,14 @@ class Leader {
         try {
           var id = link.queryParameters['id'];
           if (!link.path.contains("novel"))
-            Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return UsersPage(id: int.parse(id!));
-                },
-              ),
-            );
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).push(_buildMaterialRoute(UsersPage(id: int.parse(id!))));
           else
             Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return NovelViewerPage(id: int.parse(id!), novelStore: null);
-                },
+              _buildMaterialRoute(
+                NovelViewerPage(id: int.parse(id!), novelStore: null),
               ),
             );
           return true;
@@ -309,25 +313,19 @@ class Leader {
         } else if (i == "u") {
           try {
             int id = int.parse(link.pathSegments[link.pathSegments.length - 1]);
-            Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return UsersPage(id: id);
-                },
-              ),
-            );
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).push(_buildMaterialRoute(UsersPage(id: id)));
             return true;
           } catch (e) {}
         } else if (i == "tags") {
           try {
             String tag = link.pathSegments[link.pathSegments.length - 1];
-            Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return ResultPage(word: tag);
-                },
-              ),
-            );
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).push(_buildMaterialRoute(ResultPage(word: tag)));
             return true;
           } catch (e) {}
         }
@@ -352,7 +350,7 @@ class Leader {
     }
     return Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (context) => Scaffold(body: widget)));
+    ).push(_buildMaterialRoute(widget, wrapInScaffold: widget is! Scaffold));
   }
 
   static Future<dynamic> push(
@@ -371,8 +369,12 @@ class Leader {
         forceSkipWrap: forceSkipWrap,
       );
     }
-    return Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (context) => Scaffold(body: widget)));
+    return Navigator.of(context).push(
+      _buildMaterialRoute(
+        widget,
+        wrapInScaffold: widget is! Scaffold,
+        forceSkipWrap: forceSkipWrap,
+      ),
+    );
   }
 }

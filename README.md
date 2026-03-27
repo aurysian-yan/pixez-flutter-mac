@@ -13,7 +13,7 @@
 
 # ⚠️ 注意：
 ### 本项目为纯粹的 macOS 优化&支持分支，如你需要的并非 macOS 版本，请移步[原项目](https://github.com/Notsfsssf/pixez-flutter)
-本项目为 PixEz Flutter 增加了 macOS 支持，适配 Liquid Glass App 图标。
+本项目为 PixEz Flutter 增加了 macOS 支持，适配 Liquid Glass App 图标。仅保证基础功能可用，不对细节问题负责，修改多数均为 vibe coding。其他平台版本可能出现意想不到的问题。
 
 # 下载
 
