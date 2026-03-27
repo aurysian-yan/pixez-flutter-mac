@@ -42,7 +42,7 @@
           "image-name" : "pixez.svg",
           "name" : "pixez",
           "position" : {
-            "scale" : 1,
+            "scale" : 1.15,
             "translation-in-points" : [
               24.702421304398285,
               0.4719999994098316
