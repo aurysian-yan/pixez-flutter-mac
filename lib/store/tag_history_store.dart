@@ -87,16 +87,18 @@ abstract class _TagHistoryStoreBase with Store {
 
   Future<void> exportData(BuildContext context) async {
     await tagsPersistProvider.open();
-    final exportData =
-        ExportData(tagHisotry: await tagsPersistProvider.getAllAccount());
+    final exportData = ExportData(
+      tagHisotry: await tagsPersistProvider.getAllAccount(),
+    );
     final uint8List = utf8.encode(jsonEncode(exportData));
     if (Platform.isIOS) {
       await Sharer.exportUint8List(context, uint8List, 'tag_history.json');
     } else {
-      final uriStr =
-          await SAFPlugin.createFile("tag_history.json", "application/json");
-      if (uriStr == null) return;
-      await SAFPlugin.writeUri(uriStr, uint8List);
+      await SAFPlugin.exportFile(
+        "tag_history.json",
+        uint8List,
+        mimeType: "application/json",
+      );
     }
   }
 }

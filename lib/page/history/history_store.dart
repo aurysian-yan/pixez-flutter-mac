@@ -108,12 +108,11 @@ class History extends Notifier<HistoryState> {
     if (Platform.isIOS) {
       await Sharer.exportUint8List(context, uint8List, "illustpersist.json");
     } else {
-      final uriStr = await SAFPlugin.createFile(
+      await SAFPlugin.exportFile(
         "illustpersist.json",
-        "application/json",
+        uint8List,
+        mimeType: "application/json",
       );
-      if (uriStr == null) return;
-      await SAFPlugin.writeUri(uriStr, uint8List);
     }
   }
 }

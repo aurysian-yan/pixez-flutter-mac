@@ -72,10 +72,11 @@ abstract class _BookTagStoreBase with Store {
     if (Platform.isIOS) {
       await Sharer.exportUint8List(context, uint8List, '${EXPORT_TYPE}.json');
     } else {
-      final uriStr =
-          await SAFPlugin.createFile("${EXPORT_TYPE}.json", "application/json");
-      if (uriStr == null) return;
-      await SAFPlugin.writeUri(uriStr, uint8List);
+      await SAFPlugin.exportFile(
+        "${EXPORT_TYPE}.json",
+        uint8List,
+        mimeType: "application/json",
+      );
     }
   }
 }
