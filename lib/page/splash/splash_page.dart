@@ -96,22 +96,25 @@ class _SplashPageState extends State<SplashPage>
   Widget build(BuildContext context) {
     final brightness =
         SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
     return Scaffold(
-      backgroundColor:
-          brightness == Brightness.dark ? Colors.black : Colors.white,
+      backgroundColor: brightness == Brightness.dark
+          ? Colors.black
+          : Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          RotationTransition(
-            child: Image.asset('assets/images/icon.png', height: 80, width: 80),
-            alignment: Alignment.center,
-            turns: controller,
+          Center(
+            child: Image.asset(
+              'assets/images/icon.png',
+              height: 140,
+              width: 140,
+            ),
           ),
-          Container(
-            child: Text(splashStore.helloWord, textAlign: TextAlign.center),
-          ),
+          SizedBox(height: 40),
+          Text(splashStore.helloWord, textAlign: TextAlign.center),
         ],
       ),
     );
