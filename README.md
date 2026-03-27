@@ -11,6 +11,9 @@
 
 🎵 Mili - In Hell We Live, Lament 🎵 
 
+# ⚠️ 注意：
+#### 本项目为纯粹的 macOS 优化分支，如你需要的并非 macOS 版本，请移步[原项目](https://github.com/Notsfsssf/pixez-flutter)
+
 # 下载
 
 推荐渠道顺序为从左到右。
